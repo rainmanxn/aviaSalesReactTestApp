@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-// import { format } from 'date-fns';
+import { format } from 'date-fns';
 import _ from 'lodash';
 import Card from './Card';
 
@@ -38,7 +38,16 @@ export default class App extends React.Component {
     console.log(tickets[0]);
     const tick = tickets.splice(0, 5);
     return (
-      tick.map((el) => (<Card key={_.uniqueId()} price={el.price} carrier={el.carrier} />))
+      tick.map((el) => (
+        <Card
+          key={_.uniqueId()}
+          price={el.price}
+          carrier={el.carrier}
+          forwardRoute={`${el.segments[0].origin} - ${el.segments[0].destination}`}
+          time={format(new Date(el.segments[0].date), 'kk:mm')}
+        // time={el.segments[0].date}
+        />
+      ))
     );
   }
 }
