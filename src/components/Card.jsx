@@ -31,16 +31,12 @@ const Price = styled.div`
   color: #2196f3;
 `;
 
-class Card extends React.Component {
-  render() {
-    return (
-      <Container>
-        <Header>
-          <Price>13400 р</Price>
-        </Header>
-      </Container>
-    );
-  }
-}
+const Card = (props) => (
+  <Container>
+    <Header>
+      <Price>13400 р</Price>
+    </Header>
+  </Container>
+);
 
 export default Card;
