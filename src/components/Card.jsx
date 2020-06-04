@@ -82,13 +82,6 @@ const FieldValue = styled.div`
   color: #4a4a4a;
 `;
 
-const FilterTransfer = styled.div`
-  width: 232px;
-  height: 252px;
-  background: #ffffff;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-`;
 
 const Card = (props) => {
   const {
