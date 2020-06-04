@@ -1,37 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import { format, addMinutes } from 'date-fns';
 import _ from 'lodash';
 import Card from './Card';
 
 export default class Cards extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchIdLink: 'https://front-test.beta.aviasales.ru/search',
-      getTicketsLink: 'https://front-test.beta.aviasales.ru/tickets?searchId=',
-      tickets: [],
-    };
-  }
-
-  async componentDidMount() {
-    this.getTickets();
-  }
-
-  getTickets = async () => {
-    const { searchIdLink, getTicketsLink } = this.state;
-    const response = await axios.get(searchIdLink);
-    // console.log(response.data);
-    const { searchId } = response.data;
-    // console.log(searchId);
-    const ticketsList = await axios.get(`${getTicketsLink}${searchId}`);
-    // console.log(ticketsList.data.tickets);
-    // tickets = tickets.data.tickets;
-    // this.setState(() => ({ tickets: tickets.data }));
-    this.getTransferCountFilteredArr([1, 2, 3], ticketsList.data.tickets);
-    // this.setState({ tickets: ticketsList.data.tickets });
-  };
-
   getDestinationTime = (date, value) => addMinutes(date, value);
 
   countTime = (value) => {
@@ -46,24 +18,8 @@ export default class Cards extends React.Component {
     return `${value} ПЕРЕСАДКИ`;
   };
 
-  // [0, 1, 2, 3]
-
-  getTransferCountFilteredArr = (values, tickets) => {
-    if (values.length === 0) {
-      this.setState({ tickets });
-      return;
-    }
-    let res = [...tickets];
-    for (let i = 0; i < values.length; i += 1) {
-      res = res.filter((el) => (
-        el.segments[0].stops.length !== values[i] && el.segments[1].stops.length !== values[i]
-      ));
-    }
-    this.setState({ tickets: res });
-  }
-
   render() {
-    const { tickets } = this.state;
+    const { tickets } = this.props;
     console.log(tickets[0], tickets[1], tickets[2], tickets[3], tickets[4]);
     const tick = tickets.splice(0, 5);
     return tick.map((el) => (

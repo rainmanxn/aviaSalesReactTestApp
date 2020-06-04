@@ -38,7 +38,10 @@ const Label = styled.div`
 `;
 
 export default class FilterTransfer extends React.Component {
-  state = { checked: false }
+  state = {
+    checked: false,
+    filterStatus: [],
+  }
 
   handleCheckboxChange = (event) => {
     this.setState({ checked: event.target.checked });
