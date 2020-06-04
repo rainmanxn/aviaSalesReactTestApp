@@ -4,34 +4,30 @@ import PropTypes from 'prop-types';
 import '../index.css';
 
 const Container = styled.div`
-  position: relative;
   width: 502px;
   height: 184px;
   background: #ffffff;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 1px;
 `;
 const Header = styled.div`
-  position: relative;
   width: 432px;
   height: 36px;
-  left: 20px;
-  top: 26px;
-  border: 1px solid black;
-  /* display: flex;
-  justify-content: space-between; */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Price = styled.div`
-  position: absolute;
-  top: 18.96%;
   /* @font-face {
      src: url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
      font-family: 'Open Sans';
   } */
   font-family: Open Sans;
-  /* src: url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'); */
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
@@ -41,34 +37,27 @@ const Price = styled.div`
   color: #2196f3;
 `;
 
-const Carrier = styled.img.attrs(
-  (props) => ({ src: props.img })
-)`  
-    position: absolute;
-    right: 0px;
-    width: 110px;
-    height: 36px;
-    &:hover {
-        cursor: pointer;
-    }
+const Carrier = styled.img.attrs((props) => ({ src: props.img }))`
+  width: 110px;
+  height: 36px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Field = styled.div`
   height: 39px;
   width: 462px;
-  margin-top: 40px;
+  margin-bottom: 10px;
   margin-left: 20px;
-  border: 1px solid black;
   display: flex;
 `;
 
 const Route = styled.div`
-  position: absolute;
   width: 141px;
   height: 39px;
-  border: 1px solid black; 
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
 `;
 
 const FieldHeader = styled.div`
@@ -81,8 +70,8 @@ const FieldHeader = styled.div`
   align-items: center;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #A0B0B9;
-  `;
+  color: #a0b0b9;
+`;
 
 const FieldValue = styled.div`
   font-family: Open Sans;
@@ -90,24 +79,67 @@ const FieldValue = styled.div`
   font-weight: 600;
   font-size: 14px;
   line-height: 21px;
-  color: #4A4A4A;
+  color: #4a4a4a;
+`;
+
+const FilterTransfer = styled.div`
+  width: 232px;
+  height: 252px;
+  background: #ffffff;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
 `;
 
 const Card = (props) => {
   const {
-    price, carrier, forwardRoute, time
+    price,
+    carrier,
+    forwardRoute,
+    timeForwardStart,
+    timeForwardDestination,
+    timeFlightForward,
+    stopsForward,
+    countStopsPhrase,
+    backRoute,
+    timeBackdStart,
+    timeBackDestination,
+    timeFlightBack,
+    stopsBack,
+    countStopsPhraseBack,
   } = props;
   const logoUrl = `http://pics.avs.io/99/36/${carrier}.png`;
   return (
     <Container>
       <Header>
-        <Price>{price}</Price>
+        <Price>{`${price.toLocaleString().split(',').join(' ')} Р`}</Price>
         <Carrier img={logoUrl} />
       </Header>
       <Field>
         <Route>
           <FieldHeader>{forwardRoute}</FieldHeader>
-          <FieldValue>{time}</FieldValue>
+          <FieldValue>{`${timeForwardStart} - ${timeForwardDestination}`}</FieldValue>
+        </Route>
+        <Route>
+          <FieldHeader>В пути</FieldHeader>
+          <FieldValue>{timeFlightForward}</FieldValue>
+        </Route>
+        <Route>
+          <FieldHeader>{`${countStopsPhrase}`}</FieldHeader>
+          <FieldValue>{stopsForward}</FieldValue>
+        </Route>
+      </Field>
+      <Field>
+        <Route>
+          <FieldHeader>{backRoute}</FieldHeader>
+          <FieldValue>{`${timeBackdStart} - ${timeBackDestination}`}</FieldValue>
+        </Route>
+        <Route>
+          <FieldHeader>В пути</FieldHeader>
+          <FieldValue>{timeFlightBack}</FieldValue>
+        </Route>
+        <Route>
+          <FieldHeader>{`${countStopsPhraseBack}`}</FieldHeader>
+          <FieldValue>{stopsBack}</FieldValue>
         </Route>
       </Field>
     </Container>
