@@ -22,8 +22,12 @@ export default class App extends React.Component {
     this.getTickets();
   }
 
+  async componentDidUpdate() {
+    this.getTickets();
+  }
+
   getTickets = async () => {
-    const { searchIdLink, getTicketsLink } = this.state;
+    const { searchIdLink, getTicketsLink, status } = this.state;
     const response = await axios.get(searchIdLink);
     // console.log(response.data);
     const { searchId } = response.data;
@@ -32,32 +36,40 @@ export default class App extends React.Component {
     // console.log(ticketsList.data.tickets);
     // tickets = tickets.data.tickets;
     // this.setState(() => ({ tickets: tickets.data }));
-    this.getTransferCountFilteredArr([1, 2, 3], ticketsList.data.tickets);
+    this.getTransferCountFilteredArr(ticketsList.data.tickets);
     // this.setState({ tickets: ticketsList.data.tickets });
   };
 
-  getTransferCountFilteredArr = (values, tickets) => {
-    if (values.length === 0) {
+  getTransferCountFilteredArr = (tickets) => {
+    const { status } = this.state;
+    console.log('in function', status);
+    if (status.length === 0) {
       this.setState({ tickets });
       return;
     }
     let res = [...tickets];
-    for (let i = 0; i < values.length; i += 1) {
-      res = res.filter((el) => (
-        el.segments[0].stops.length !== values[i] && el.segments[1].stops.length !== values[i]
-      ));
+    for (let i = 0; i < status.length; i += 1) {
+      res.filter(
+        (el) =>
+          el.segments[0].stops.length !== status[i] && el.segments[1].stops.length !== status[i]
+      );
     }
+    console.log(res);
     this.setState({ tickets: res });
-  }
+  };
 
   updateFilteredTransfer = (value) => {
-    const { status } = this.state;
-    const res = status.map((el) => el !== value);
+    console.log('Value:', value);
+    // const { status } = this.state;
+    let status = [0, 1, 2, 3];
+    // console.log('status:', status);
+    const res = status.filter((el) => value.indexOf(el) === -1);
     this.setState({ status: res });
-  }
+  };
 
   render() {
-    const { tickets } = this.state;
+    const { tickets, status } = this.state;
+    console.log('App:', status);
     return (
       <>
         <FilterTransfer updateFilteredTransfer={this.updateFilteredTransfer} />

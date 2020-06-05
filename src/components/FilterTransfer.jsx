@@ -22,7 +22,7 @@ const Header = styled.div`
   line-height: 12px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #4A4A4A;
+  color: #4a4a4a;
 `;
 
 const CheckboxContainer = styled.div`
@@ -31,47 +31,93 @@ const CheckboxContainer = styled.div`
   flex-direction: column;
 `;
 
-const Label = styled.div`
+const Label = styled.label`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+`;
+
+const CheckboxText = styled.span`
+  margin-left: 8px;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 20px;
+  color: #4a4a4a;
 `;
 
 export default class FilterTransfer extends React.Component {
   state = {
     checked: false,
     filterStatus: [],
-  }
+  };
 
-  handleCheckboxChange = (event) => {
-    this.setState({ checked: event.target.checked });
-  }
+  handleCheckboxChange = (value) => (event) => {
+    const { filterStatus } = this.state;
+    let res = filterStatus;
+    if (event.target.checked) {
+      res = [...filterStatus, value];
+      this.setState({ filterStatus: [...filterStatus, value] });
+    }
+    if (!event.target.checked) {
+      res = filterStatus.filter((el) => el !== value);
+      this.setState({ filterStatus: filterStatus.filter((el) => el !== value) });
+    }
+    // this.setState({ checked: event.target.checked });
+    this.update(res);
+  };
+
+  update = (value) => {
+    const { updateFilteredTransfer } = this.props;
+    updateFilteredTransfer(value);
+  };
+
+  renderCheckboxes = () => {
+    let arr = [
+      [0, 'Без пересадок'],
+      [1, '1 пересадка'],
+      [2, '2 пересадки'],
+      [3, '3 пересадки'],
+    ];
+    return arr.map((el) => {
+      return (
+        <Label key={el[0]}>
+          <Checkbox
+            checked={this.state.filterStatus.indexOf(el[0]) !== -1}
+            onChange={this.handleCheckboxChange(el[0])}
+          />
+          <CheckboxText>{el[1]}</CheckboxText>
+        </Label>
+      );
+    });
+  };
 
   render() {
     return (
       <Container>
         <Header>количество пересадок</Header>
-        <CheckboxContainer>
-          <Label>
-            <label>
-              <Checkbox
-                checked={this.state.checked}
-                onChange={this.handleCheckboxChange}
-              />
-              <span style={{ marginLeft: 8 }}>Label Text</span>
-            </label>
-          </Label>
-          <Label>
-            <label>
-              <Checkbox
-                checked={this.state.checked}
-                onChange={this.handleCheckboxChange}
-              />
-              <span style={{ marginLeft: 8 }}>Label Text</span>
-            </label>
-          </Label>
-        </CheckboxContainer>
+        <CheckboxContainer>{this.renderCheckboxes()}</CheckboxContainer>
       </Container>
     );
   }
 }
+
+// <Label>
+//   <label>
+//     <Checkbox
+//       checked={this.state.filterStatus.indexOf(1) !== -1}
+//       onChange={this.handleCheckboxChange(1)}
+//     />
+//     <span style={{ marginLeft: 8 }}>Label Text</span>
+//   </label>
+// </Label>
+// <Label>
+//   <label>
+//     <Checkbox
+//       checked={this.state.filterStatus.indexOf(2) !== -1}
+//       onChange={this.handleCheckboxChange(2)}
+//     />
+//     <span style={{ marginLeft: 8 }}>Label Text</span>
+//   </label>
+// </Label>
