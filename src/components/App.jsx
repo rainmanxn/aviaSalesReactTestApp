@@ -44,28 +44,20 @@ export default class App extends React.Component {
 
   getTransferCountFilteredArr = (tickets, curStatus = []) => {
     // const { status } = this.state;
-    console.log('in function', curStatus);
-    console.log('in function tickets', tickets);
+    // console.log('in function', curStatus);
+    // console.log('in function tickets', tickets);
     if (curStatus.length === 4) {
       this.setState({ filtered: tickets });
       return;
     }
-    console.log('TUT!!!', tickets[0]);
-    console.log('TUT!!!', tickets[0].segments[0].stops.length);
-    console.log('TUT!!!', tickets[0].segments[1].stops.length);
+    // console.log('TUT!!!', tickets[0]);
+    // console.log('TUT!!!', tickets[0].segments[0].stops.length);
+    // console.log('TUT!!!', tickets[0].segments[1].stops.length);
 
     const filteredTickets = tickets.filter((el) => (curStatus.indexOf(el.segments[0].stops.length) === -1
       && curStatus.indexOf(el.segments[1].stops.length) === -1));
-    // for (let i = 0; i < curStatus.length; i += 1) {
-    //   let arr = [];
-    //   arr = tickets.filter(
-    //     (el) => el.segments[0].stops.length !== curStatus[i] && el.segments[1].stops.length !== curStatus[i]
-    //   );
-    //   filteredTickets = [...filteredTickets, ...arr];
-    // }
 
-
-    console.log('!!!result', filteredTickets);
+    // console.log('!!!result', filteredTickets);
     this.setState({ filtered: filteredTickets });
   };
 
@@ -74,6 +66,10 @@ export default class App extends React.Component {
     // console.log('Value:', value);
     // const { status } = this.state;
     const status = [0, 1, 2, 3];
+    if (value === -1) {
+      this.getTransferCountFilteredArr(tickets, status);
+      return;
+    }
     // console.log('status:', status);
     const res = status.filter((el) => value.indexOf(el) === -1);
     // console.log('res', res);

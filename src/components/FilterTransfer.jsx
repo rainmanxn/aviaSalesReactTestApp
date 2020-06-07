@@ -53,14 +53,23 @@ export default class FilterTransfer extends React.Component {
   };
 
   handleCheckboxChange = (value) => (event) => {
+    if (value === -1) {
+      this.setState({ filterStatus: [-1] });
+      this.update(-1);
+      return;
+    }
     const { filterStatus } = this.state;
+    console.log('!!!!!!!!!', filterStatus);
     let res = filterStatus;
+    if (res.indexOf(-1) !== -1) {
+      res = [];
+    }
     if (event.target.checked) {
-      res = [...filterStatus, value];
+      res = [...res, value];
       this.setState({ filterStatus: res });
     }
     if (!event.target.checked) {
-      res = filterStatus.filter((el) => el !== value);
+      res = res.filter((el) => el !== value);
       this.setState({ filterStatus: res });
     }
     // this.setState({ checked: event.target.checked });
@@ -74,6 +83,7 @@ export default class FilterTransfer extends React.Component {
 
   renderCheckboxes = () => {
     const arr = [
+      [-1, 'все'],
       [0, 'Без пересадок'],
       [1, '1 пересадка'],
       [2, '2 пересадки'],
