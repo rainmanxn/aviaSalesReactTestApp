@@ -49,7 +49,6 @@ const CheckboxText = styled.span`
 
 export default class FilterTransfer extends React.Component {
   state = {
-    checked: false,
     filterStatus: [],
   };
 
@@ -58,11 +57,11 @@ export default class FilterTransfer extends React.Component {
     let res = filterStatus;
     if (event.target.checked) {
       res = [...filterStatus, value];
-      this.setState({ filterStatus: [...filterStatus, value] });
+      this.setState({ filterStatus: res });
     }
     if (!event.target.checked) {
       res = filterStatus.filter((el) => el !== value);
-      this.setState({ filterStatus: filterStatus.filter((el) => el !== value) });
+      this.setState({ filterStatus: res });
     }
     // this.setState({ checked: event.target.checked });
     this.update(res);
@@ -74,23 +73,21 @@ export default class FilterTransfer extends React.Component {
   };
 
   renderCheckboxes = () => {
-    let arr = [
+    const arr = [
       [0, 'Без пересадок'],
       [1, '1 пересадка'],
       [2, '2 пересадки'],
       [3, '3 пересадки'],
     ];
-    return arr.map((el) => {
-      return (
-        <Label key={el[0]}>
-          <Checkbox
-            checked={this.state.filterStatus.indexOf(el[0]) !== -1}
-            onChange={this.handleCheckboxChange(el[0])}
-          />
-          <CheckboxText>{el[1]}</CheckboxText>
-        </Label>
-      );
-    });
+    return arr.map((el) => (
+      <Label key={el[0]}>
+        <Checkbox
+          checked={this.state.filterStatus.indexOf(el[0]) !== -1}
+          onChange={this.handleCheckboxChange(el[0])}
+        />
+        <CheckboxText>{el[1]}</CheckboxText>
+      </Label>
+    ));
   };
 
   render() {
