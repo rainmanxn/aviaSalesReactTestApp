@@ -48,14 +48,26 @@ export default class CheapFastFilter extends React.Component {
   };
 
   handleClickCheap = (e) => {
-    const { isActiveCheap } = this.state;
     e.preventDefault();
+    const { isActiveCheap, isActiveFast } = this.state;
+    const { cheapFastGetFilter } = this.props;
+    if (!isActiveCheap) cheapFastGetFilter('cheapest');
+    if (!isActiveCheap && isActiveFast) {
+      this.setState({ isActiveCheap: !isActiveCheap, isActiveFast: !isActiveFast });
+      return;
+    }
     this.setState({ isActiveCheap: !isActiveCheap });
   };
 
   handleClickFast = (e) => {
-    const { isActiveFast } = this.state;
     e.preventDefault();
+    const { isActiveCheap, isActiveFast } = this.state;
+    const { cheapFastGetFilter } = this.props;
+    if (!isActiveFast) cheapFastGetFilter('fast');
+    if (isActiveCheap && !isActiveFast) {
+      this.setState({ isActiveCheap: !isActiveCheap, isActiveFast: !isActiveFast });
+      return;
+    }
     this.setState({ isActiveFast: !isActiveFast });
   };
 

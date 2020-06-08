@@ -1,8 +1,10 @@
 import React from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 import Cards from './Cards';
 import FilterTransfer from './FilterTransfer';
 import CheapFastFilter from './CheapFastFilter';
+import logo from '../img/logo.svg';
 
 // const App = () => (
 //   <>
@@ -10,6 +12,32 @@ import CheapFastFilter from './CheapFastFilter';
 //     <Cards />
 //   </>
 // );
+const Logo = styled.img.attrs((props) => ({ src: props.img }))`
+  height: 70px;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: #F3F7FA;
+`;
+
+const Main = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Main1 = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+`;
 
 export default class App extends React.Component {
   state = {
@@ -56,9 +84,8 @@ export default class App extends React.Component {
     // console.log('TUT!!!', tickets[0].segments[1].stops.length);
 
     const filteredTickets = tickets.filter(
-      (el) =>
-        curStatus.indexOf(el.segments[0].stops.length) === -1 &&
-        curStatus.indexOf(el.segments[1].stops.length) === -1
+      (el) => curStatus.indexOf(el.segments[0].stops.length) === -1
+        && curStatus.indexOf(el.segments[1].stops.length) === -1
     );
 
     // console.log('!!!result', filteredTickets);
@@ -81,17 +108,37 @@ export default class App extends React.Component {
     this.getTransferCountFilteredArr(tickets, res);
   };
 
+  cheapFastGetFilter = (value) => {
+    const { filtered } = this.state;
+    if (value === 'cheapest') {
+      const arr = filtered;
+      arr.sort((a, b) => a.price - b.price);
+      this.setState({ filtered: arr });
+      console.log(arr);
+    }
+    if (value === 'fast') {
+      const arr = filtered;
+      arr.sort((a, b) => (a.segments[0].duration + a.segments[1].duration) - (b.segments[0].duration + b.segments[1].duration));
+      this.setState({ filtered: arr });
+      console.log(arr);
+    }
+  }
+
   render() {
     const { filtered, status, tickets } = this.state;
-    // console.log('App:', status);
     // console.log('filtered:', filtered);
     // console.log('NONfiltered:', tickets);
     return (
-      <>
-        <CheapFastFilter />
-        <FilterTransfer updateFilteredTransfer={this.updateFilteredTransfer} />
-        <Cards tickets={filtered} />
-      </>
+      <Container>
+        <Logo img={logo} />
+        <Main>
+          <FilterTransfer updateFilteredTransfer={this.updateFilteredTransfer} />
+          <Main1>
+            <CheapFastFilter cheapFastGetFilter={this.cheapFastGetFilter} />
+            <Cards tickets={filtered} />
+          </Main1>
+        </Main>
+      </Container>
     );
   }
 }
