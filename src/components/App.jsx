@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Cards from './Cards';
 import FilterTransfer from './FilterTransfer';
+import CheapFastFilter from './CheapFastFilter';
 
 // const App = () => (
 //   <>
@@ -54,8 +55,11 @@ export default class App extends React.Component {
     // console.log('TUT!!!', tickets[0].segments[0].stops.length);
     // console.log('TUT!!!', tickets[0].segments[1].stops.length);
 
-    const filteredTickets = tickets.filter((el) => (curStatus.indexOf(el.segments[0].stops.length) === -1
-      && curStatus.indexOf(el.segments[1].stops.length) === -1));
+    const filteredTickets = tickets.filter(
+      (el) =>
+        curStatus.indexOf(el.segments[0].stops.length) === -1 &&
+        curStatus.indexOf(el.segments[1].stops.length) === -1
+    );
 
     // console.log('!!!result', filteredTickets);
     this.setState({ filtered: filteredTickets });
@@ -84,6 +88,7 @@ export default class App extends React.Component {
     // console.log('NONfiltered:', tickets);
     return (
       <>
+        <CheapFastFilter />
         <FilterTransfer updateFilteredTransfer={this.updateFilteredTransfer} />
         <Cards tickets={filtered} />
       </>

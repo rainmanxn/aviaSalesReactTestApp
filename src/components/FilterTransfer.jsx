@@ -49,7 +49,7 @@ const CheckboxText = styled.span`
 
 export default class FilterTransfer extends React.Component {
   state = {
-    filterStatus: [],
+    filterStatus: [-1],
   };
 
   handleCheckboxChange = (value) => (event) => {
