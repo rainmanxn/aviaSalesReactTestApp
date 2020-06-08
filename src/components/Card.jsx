@@ -23,10 +23,6 @@ const Header = styled.div`
 `;
 
 const Price = styled.div`
-  /* @font-face {
-     src: url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
-     font-family: 'Open Sans';
-  } */
   font-family: Open Sans;
   font-style: normal;
   font-weight: 600;
@@ -143,6 +139,17 @@ Card.propTypes = {
   price: PropTypes.number.isRequired,
   carrier: PropTypes.string.isRequired,
   forwardRoute: PropTypes.string.isRequired,
+  timeForwardStart: PropTypes.string.isRequired,
+  timeForwardDestination: PropTypes.string.isRequired,
+  timeFlightForward: PropTypes.string.isRequired,
+  stopsForward: PropTypes.string.isRequired,
+  countStopsPhrase: PropTypes.string.isRequired,
+  backRoute: PropTypes.string.isRequired,
+  timeBackdStart: PropTypes.string.isRequired,
+  timeBackDestination: PropTypes.string.isRequired,
+  timeFlightBack: PropTypes.string.isRequired,
+  stopsBack: PropTypes.string.isRequired,
+  countStopsPhraseBack: PropTypes.string.isRequired,
 };
 
 export default Card;

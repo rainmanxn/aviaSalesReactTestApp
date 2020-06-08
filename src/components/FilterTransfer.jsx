@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Checkbox from './Checkbox';
 
 const Container = styled.div`
@@ -59,7 +60,6 @@ export default class FilterTransfer extends React.Component {
       return;
     }
     const { filterStatus } = this.state;
-    console.log('!!!!!!!!!', filterStatus);
     let res = filterStatus;
     if (res.indexOf(-1) !== -1) {
       res = [];
@@ -82,6 +82,7 @@ export default class FilterTransfer extends React.Component {
   };
 
   renderCheckboxes = () => {
+    const { filterStatus } = this.state;
     const arr = [
       [-1, 'все'],
       [0, 'Без пересадок'],
@@ -92,7 +93,7 @@ export default class FilterTransfer extends React.Component {
     return arr.map((el) => (
       <Label key={el[0]}>
         <Checkbox
-          checked={this.state.filterStatus.indexOf(el[0]) !== -1}
+          checked={filterStatus.indexOf(el[0]) !== -1}
           onChange={this.handleCheckboxChange(el[0])}
         />
         <CheckboxText>{el[1]}</CheckboxText>
@@ -110,21 +111,6 @@ export default class FilterTransfer extends React.Component {
   }
 }
 
-// <Label>
-//   <label>
-//     <Checkbox
-//       checked={this.state.filterStatus.indexOf(1) !== -1}
-//       onChange={this.handleCheckboxChange(1)}
-//     />
-//     <span style={{ marginLeft: 8 }}>Label Text</span>
-//   </label>
-// </Label>
-// <Label>
-//   <label>
-//     <Checkbox
-//       checked={this.state.filterStatus.indexOf(2) !== -1}
-//       onChange={this.handleCheckboxChange(2)}
-//     />
-//     <span style={{ marginLeft: 8 }}>Label Text</span>
-//   </label>
-// </Label>
+FilterTransfer.propTypes = {
+  updateFilteredTransfer: PropTypes.func.isRequired,
+};

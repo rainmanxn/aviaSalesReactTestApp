@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   width: 503px;
@@ -24,20 +25,16 @@ const Button = styled.button`
 `;
 
 const Text = styled.div`
-  font-family: Open Sans;
+  font-family: 'Open Sans';
   font-style: normal;
   font-weight: 600;
   font-size: 12px;
   line-height: 20px;
-  /* identical to box height, or 167% */
-
   display: flex;
   align-items: center;
   text-align: center;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-
-  color: #ffffff;
   color: ${(props) => (props.active ? '#FFFFFF' : '#4A4A4A')};
 `;
 
@@ -47,11 +44,12 @@ export default class CheapFastFilter extends React.Component {
     isActiveFast: false,
   };
 
-  handleClickCheap = (e) => {
-    e.preventDefault();
+  handleClickCheap = (event) => {
+    event.preventDefault();
     const { isActiveCheap, isActiveFast } = this.state;
     const { cheapFastGetFilter } = this.props;
     if (!isActiveCheap) cheapFastGetFilter('cheapest');
+    if (isActiveCheap) cheapFastGetFilter('default');
     if (!isActiveCheap && isActiveFast) {
       this.setState({ isActiveCheap: !isActiveCheap, isActiveFast: !isActiveFast });
       return;
@@ -59,11 +57,12 @@ export default class CheapFastFilter extends React.Component {
     this.setState({ isActiveCheap: !isActiveCheap });
   };
 
-  handleClickFast = (e) => {
-    e.preventDefault();
+  handleClickFast = (event) => {
+    event.preventDefault();
     const { isActiveCheap, isActiveFast } = this.state;
     const { cheapFastGetFilter } = this.props;
     if (!isActiveFast) cheapFastGetFilter('fast');
+    if (isActiveFast) cheapFastGetFilter('default');
     if (isActiveCheap && !isActiveFast) {
       this.setState({ isActiveCheap: !isActiveCheap, isActiveFast: !isActiveFast });
       return;
@@ -85,3 +84,7 @@ export default class CheapFastFilter extends React.Component {
     );
   }
 }
+
+CheapFastFilter.propTypes = {
+  cheapFastGetFilter: PropTypes.func.isRequired,
+};

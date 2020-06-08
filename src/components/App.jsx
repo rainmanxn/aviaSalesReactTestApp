@@ -6,12 +6,6 @@ import FilterTransfer from './FilterTransfer';
 import CheapFastFilter from './CheapFastFilter';
 import logo from '../img/logo.svg';
 
-// const App = () => (
-//   <>
-//     <FilterTransfer />
-//     <Cards />
-//   </>
-// );
 const Logo = styled.img.attrs((props) => ({ src: props.img }))`
   height: 70px;
   margin-top: 50px;
@@ -44,90 +38,92 @@ export default class App extends React.Component {
     searchIdLink: 'https://front-test.beta.aviasales.ru/search',
     getTicketsLink: 'https://front-test.beta.aviasales.ru/tickets?searchId=',
     tickets: [],
-    status: [0, 1, 2, 3],
+    // status: [0, 1, 2, 3],
     filtered: [],
+    filt: '',
   };
 
   async componentDidMount() {
     this.getTickets();
   }
 
-  // async componentDidUpdate() {
-  //   this.getTickets();
-  // }
-
   getTickets = async () => {
-    const { searchIdLink, getTicketsLink, status } = this.state;
-    const response = await axios.get(searchIdLink);
-    // console.log(response.data);
-    const { searchId } = response.data;
-    // console.log(searchId);
-    const ticketsList = await axios.get(`${getTicketsLink}${searchId}`);
-    // console.log(ticketsList.data.tickets);
-    // tickets = tickets.data.tickets;
-    // this.setState(() => ({ tickets: tickets.data }));
-    // this.getTransferCountFilteredArr(ticketsList.data.tickets);
-    this.setState({ tickets: ticketsList.data.tickets });
-    this.setState({ filtered: ticketsList.data.tickets });
+    const { searchIdLink, getTicketsLink } = this.state;
+    try {
+      const response = await axios.get(searchIdLink);
+      const { searchId } = response.data;
+      const ticketsList = await axios.get(`${getTicketsLink}${searchId}`);
+      this.setState({ tickets: ticketsList.data.tickets });
+      this.setState({ filtered: ticketsList.data.tickets });
+    } catch {
+      this.getTickets();
+    }
   };
 
   getTransferCountFilteredArr = (tickets, curStatus = []) => {
-    // const { status } = this.state;
-    // console.log('in function', curStatus);
-    // console.log('in function tickets', tickets);
     if (curStatus.length === 4) {
-      this.setState({ filtered: tickets });
+      const filteredTickets = this.sortArr(tickets);
+      this.setState({ filtered: filteredTickets });
       return;
     }
-    // console.log('TUT!!!', tickets[0]);
-    // console.log('TUT!!!', tickets[0].segments[0].stops.length);
-    // console.log('TUT!!!', tickets[0].segments[1].stops.length);
 
-    const filteredTickets = tickets.filter(
+    let filteredTickets = tickets.filter(
       (el) => curStatus.indexOf(el.segments[0].stops.length) === -1
         && curStatus.indexOf(el.segments[1].stops.length) === -1
     );
-
-    // console.log('!!!result', filteredTickets);
+    filteredTickets = this.sortArr(filteredTickets);
     this.setState({ filtered: filteredTickets });
   };
 
   updateFilteredTransfer = (value) => {
     const { tickets } = this.state;
-    // console.log('Value:', value);
-    // const { status } = this.state;
     const status = [0, 1, 2, 3];
     if (value === -1) {
       this.getTransferCountFilteredArr(tickets, status);
       return;
     }
-    // console.log('status:', status);
     const res = status.filter((el) => value.indexOf(el) === -1);
-    // console.log('res', res);
-    this.setState({ status: res });
+    // this.setState({ status: res });
     this.getTransferCountFilteredArr(tickets, res);
   };
 
   cheapFastGetFilter = (value) => {
     const { filtered } = this.state;
+    this.setState({ filt: value });
     if (value === 'cheapest') {
       const arr = filtered;
-      arr.sort((a, b) => a.price - b.price);
+      arr.sort((first, second) => first.price - second.price);
       this.setState({ filtered: arr });
-      console.log(arr);
+      return;
     }
     if (value === 'fast') {
       const arr = filtered;
-      arr.sort((a, b) => (a.segments[0].duration + a.segments[1].duration) - (b.segments[0].duration + b.segments[1].duration));
+      arr.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
+        - (second.segments[0].duration + second.segments[1].duration));
       this.setState({ filtered: arr });
-      console.log(arr);
     }
+    // this.setState({ filtered });
+  }
+
+  sortArr = (array) => {
+    const { filt } = this.state;
+    if (filt === 'cheapest') {
+      const arr = array;
+      arr.sort((first, second) => first.price - second.price);
+      return arr;
+    }
+    if (filt === 'fast') {
+      const arr = array;
+      arr.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
+        - (second.segments[0].duration + second.segments[1].duration));
+      return arr;
+    }
+    return array;
+    // this.setState({ filtered });
   }
 
   render() {
-    const { filtered, status, tickets } = this.state;
-    // console.log('filtered:', filtered);
-    // console.log('NONfiltered:', tickets);
+    const { filtered } = this.state;
     return (
       <Container>
         <Logo img={logo} />
