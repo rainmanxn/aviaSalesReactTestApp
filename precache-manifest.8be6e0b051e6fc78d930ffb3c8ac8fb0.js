@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "61f0f76fba6d57066bcdedaafdbdac12",
+    "revision": "f22a4ed0f4f161057e3438444c8a57a6",
     "url": "/avia19/index.html"
   },
   {
-    "revision": "13019f7964c70d943785",
+    "revision": "07cc7f706e8098acae36",
     "url": "/avia19/static/css/main.0fa0cef4.chunk.css"
   },
   {
-    "revision": "51c686b6dec12210097d",
-    "url": "/avia19/static/js/2.894d8534.chunk.js"
+    "revision": "ad9af3a48875a7c5c014",
+    "url": "/avia19/static/js/2.b3735720.chunk.js"
   },
   {
     "revision": "64bea2e190f27355a76963b8cb94bb7b",
-    "url": "/avia19/static/js/2.894d8534.chunk.js.LICENSE.txt"
+    "url": "/avia19/static/js/2.b3735720.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "13019f7964c70d943785",
-    "url": "/avia19/static/js/main.5171c995.chunk.js"
+    "revision": "07cc7f706e8098acae36",
+    "url": "/avia19/static/js/main.369bb966.chunk.js"
   },
   {
     "revision": "55043155db108cd31158",
