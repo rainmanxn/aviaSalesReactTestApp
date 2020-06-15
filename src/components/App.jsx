@@ -36,96 +36,93 @@ const Main1 = styled.div`
 
 export default class App extends React.Component {
   state = {
-    searchIdLink: 'https://front-test.beta.aviasales.ru/search',
-    getTicketsLink: 'https://front-test.beta.aviasales.ru/tickets?searchId=',
     tickets: [],
-    // status: [0, 1, 2, 3],
-    filtered: [],
-    filt: '',
+    status: ['0tranfers', '1tranfers', '2tranfers', '3tranfers'],
+    filt: 'default',
   };
+
+  searchIdLink = 'https://front-test.beta.aviasales.ru/search';
+
+  getTicketsLink = 'https://front-test.beta.aviasales.ru/tickets?searchId=';
 
   async componentDidMount() {
     this.getTickets();
   }
 
   getTickets = async () => {
-    const { searchIdLink, getTicketsLink } = this.state;
     try {
-      const response = await axios.get(searchIdLink);
+      const response = await axios.get(this.searchIdLink);
       const { searchId } = response.data;
-      const ticketsList = await axios.get(`${getTicketsLink}${searchId}`);
+      const ticketsList = await axios.get(`${this.getTicketsLink}${searchId}`);
       const tickets = ticketsList.data.tickets.map((el) => ({ ...el, id: __.uniqueId() }));
       this.setState({ tickets });
-      this.setState({ filtered: tickets });
     } catch {
       this.getTickets();
     }
   };
 
-  getTransferCountFilteredArr = (tickets, curStatus = []) => {
-    if (curStatus.length === 4) {
+  getTransferCountFilteredArr = (tickets) => {
+    const { status } = this.state;
+    if (status.length === 4) {
       const filteredTickets = this.sortArr(tickets);
-      this.setState({ filtered: filteredTickets });
-      return;
+      return filteredTickets;
     }
-    const curStatusToNum = curStatus.map((el) => Number(el[0]));
+    const curStatusToNum = status.map((el) => Number(el[0]));
     let filteredTickets = tickets.filter(
       (el) => curStatusToNum.indexOf(el.segments[0].stops.length) === -1
         && curStatusToNum.indexOf(el.segments[1].stops.length) === -1
     );
     filteredTickets = this.sortArr(filteredTickets);
-    this.setState({ filtered: filteredTickets });
+    return filteredTickets;
   };
 
   updateFilteredTransfer = (value) => {
-    const { tickets } = this.state;
-    const status = ['0tranfers', '1tranfers', '2tranfers', '3tranfers'];
-    if (value === 'all') {
-      this.getTransferCountFilteredArr(tickets, status);
+    const tempStatus = ['0tranfers', '1tranfers', '2tranfers', '3tranfers'];
+    // console.log(value);
+    if (value === 'all' || value.length === 0) {
+      this.setState({ status: ['all'] });
       return;
     }
-    const res = status.filter((el) => value.indexOf(el) === -1);
-    // this.setState({ status: res });
-    this.getTransferCountFilteredArr(tickets, res);
+    const res = tempStatus.filter((el) => value.indexOf(el) === -1);
+    this.setState({ status: res });
   };
 
   cheapFastGetFilter = (value) => {
-    const { filtered } = this.state;
     this.setState({ filt: value });
-    if (value === 'cheapest') {
-      const arr = filtered;
+  }
+
+  renderFastGetFilter = (tickets) => {
+    const { filt } = this.state;
+    if (filt === 'cheapest') {
+      const arr = tickets;
       arr.sort((first, second) => first.price - second.price);
-      this.setState({ filtered: arr });
-      return;
+      return arr;
     }
-    if (value === 'fast') {
-      const arr = filtered;
+    if (filt === 'fast') {
+      const arr = tickets;
       arr.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
         - (second.segments[0].duration + second.segments[1].duration));
-      this.setState({ filtered: arr });
+      return arr;
     }
-    // this.setState({ filtered });
+    return tickets;
   }
 
   sortArr = (array) => {
     const { filt } = this.state;
     if (filt === 'cheapest') {
-      const arr = array;
-      arr.sort((first, second) => first.price - second.price);
-      return arr;
+      return array.sort((first, second) => first.price - second.price);
     }
     if (filt === 'fast') {
-      const arr = array;
-      arr.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
+      return array.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
         - (second.segments[0].duration + second.segments[1].duration));
-      return arr;
     }
     return array;
-    // this.setState({ filtered });
   }
 
   render() {
-    const { filtered } = this.state;
+    const { tickets } = this.state;
+    let filtered = this.renderFastGetFilter(tickets);
+    filtered = this.getTransferCountFilteredArr(filtered);
     return (
       <Container>
         <Logo img={logo} />

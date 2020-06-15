@@ -60,6 +60,11 @@ export default class FilterTransfer extends React.Component {
       return;
     }
     const { filterStatus } = this.state;
+    if (filterStatus.length === 1 && value.indexOf(filterStatus) !== -1) {
+      this.setState({ filterStatus: ['all'] });
+      this.update('all');
+      return;
+    }
     let res = filterStatus;
     if (res.indexOf('all') !== -1) {
       res = [];
@@ -72,7 +77,6 @@ export default class FilterTransfer extends React.Component {
       res = res.filter((el) => el !== value);
       this.setState({ filterStatus: res });
     }
-    // this.setState({ checked: event.target.checked });
     this.update(res);
   };
 
