@@ -40,45 +40,44 @@ const Text = styled.div`
 
 export default class CheapFastFilter extends React.Component {
   state = {
-    isActiveCheap: false,
-    isActiveFast: false,
+    buttonState: 'default',
   };
 
   handleClickCheap = (event) => {
     event.preventDefault();
-    const { isActiveCheap, isActiveFast } = this.state;
+    const { buttonState } = this.state;
     const { cheapFastGetFilter } = this.props;
-    if (!isActiveCheap) cheapFastGetFilter('cheapest');
-    if (isActiveCheap) cheapFastGetFilter('default');
-    if (!isActiveCheap && isActiveFast) {
-      this.setState({ isActiveCheap: !isActiveCheap, isActiveFast: !isActiveFast });
+    if (buttonState !== 'cheapest') {
+      cheapFastGetFilter('cheapest');
+      this.setState({ buttonState: 'cheapest' });
       return;
     }
-    this.setState({ isActiveCheap: !isActiveCheap });
+    cheapFastGetFilter('default');
+    this.setState({ buttonState: 'default' });
   };
 
   handleClickFast = (event) => {
     event.preventDefault();
-    const { isActiveCheap, isActiveFast } = this.state;
+    const { buttonState } = this.state;
     const { cheapFastGetFilter } = this.props;
-    if (!isActiveFast) cheapFastGetFilter('fast');
-    if (isActiveFast) cheapFastGetFilter('default');
-    if (isActiveCheap && !isActiveFast) {
-      this.setState({ isActiveCheap: !isActiveCheap, isActiveFast: !isActiveFast });
+    if (buttonState !== 'fast') {
+      cheapFastGetFilter('fast');
+      this.setState({ buttonState: 'fast' });
       return;
     }
-    this.setState({ isActiveFast: !isActiveFast });
+    cheapFastGetFilter('default');
+    this.setState({ buttonState: 'default' });
   };
 
   render() {
-    const { isActiveCheap, isActiveFast } = this.state;
+    const { buttonState } = this.state;
     return (
       <Container>
-        <Button active={isActiveCheap} first onClick={this.handleClickCheap}>
-          <Text active={isActiveCheap}>самый дешевый</Text>
+        <Button active={buttonState === 'cheapest'} first onClick={this.handleClickCheap}>
+          <Text active={buttonState === 'cheapest'}>самый дешевый</Text>
         </Button>
-        <Button active={isActiveFast} onClick={this.handleClickFast}>
-          <Text active={isActiveFast}>самый быстрый</Text>
+        <Button active={buttonState === 'fast'} onClick={this.handleClickFast}>
+          <Text active={buttonState === 'fast'}>самый быстрый</Text>
         </Button>
       </Container>
     );

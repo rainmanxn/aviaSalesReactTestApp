@@ -50,18 +50,18 @@ const CheckboxText = styled.span`
 
 export default class FilterTransfer extends React.Component {
   state = {
-    filterStatus: [-1],
+    filterStatus: ['all'],
   };
 
   handleCheckboxChange = (value) => (event) => {
-    if (value === -1) {
-      this.setState({ filterStatus: [-1] });
-      this.update(-1);
+    if (value === 'all') {
+      this.setState({ filterStatus: ['all'] });
+      this.update(value);
       return;
     }
     const { filterStatus } = this.state;
     let res = filterStatus;
-    if (res.indexOf(-1) !== -1) {
+    if (res.indexOf('all') !== -1) {
       res = [];
     }
     if (event.target.checked) {
@@ -84,19 +84,19 @@ export default class FilterTransfer extends React.Component {
   renderCheckboxes = () => {
     const { filterStatus } = this.state;
     const arr = [
-      [-1, 'все'],
-      [0, 'Без пересадок'],
-      [1, '1 пересадка'],
-      [2, '2 пересадки'],
-      [3, '3 пересадки'],
+      ['all', 'все'],
+      ['0tranfers', 'Без пересадок'],
+      ['1tranfers', '1 пересадка'],
+      ['2tranfers', '2 пересадки'],
+      ['3tranfers', '3 пересадки'],
     ];
-    return arr.map((el) => (
-      <Label key={el[0]}>
+    return arr.map(([transfersCount, text]) => (
+      <Label key={transfersCount}>
         <Checkbox
-          checked={filterStatus.indexOf(el[0]) !== -1}
-          onChange={this.handleCheckboxChange(el[0])}
+          checked={filterStatus.indexOf(transfersCount) !== -1}
+          onChange={this.handleCheckboxChange(transfersCount)}
         />
-        <CheckboxText>{el[1]}</CheckboxText>
+        <CheckboxText>{text}</CheckboxText>
       </Label>
     ));
   };

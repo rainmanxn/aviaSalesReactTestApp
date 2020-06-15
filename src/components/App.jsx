@@ -68,10 +68,10 @@ export default class App extends React.Component {
       this.setState({ filtered: filteredTickets });
       return;
     }
-
+    const curStatusToNum = curStatus.map((el) => Number(el[0]));
     let filteredTickets = tickets.filter(
-      (el) => curStatus.indexOf(el.segments[0].stops.length) === -1
-        && curStatus.indexOf(el.segments[1].stops.length) === -1
+      (el) => curStatusToNum.indexOf(el.segments[0].stops.length) === -1
+        && curStatusToNum.indexOf(el.segments[1].stops.length) === -1
     );
     filteredTickets = this.sortArr(filteredTickets);
     this.setState({ filtered: filteredTickets });
@@ -79,8 +79,8 @@ export default class App extends React.Component {
 
   updateFilteredTransfer = (value) => {
     const { tickets } = this.state;
-    const status = [0, 1, 2, 3];
-    if (value === -1) {
+    const status = ['0tranfers', '1tranfers', '2tranfers', '3tranfers'];
+    if (value === 'all') {
       this.getTransferCountFilteredArr(tickets, status);
       return;
     }
