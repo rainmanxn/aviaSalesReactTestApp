@@ -1,6 +1,5 @@
 import React from 'react';
 import { format, addMinutes } from 'date-fns';
-import __ from 'lodash';
 import PropTypes from 'prop-types';
 import Card from './Card';
 
@@ -22,31 +21,39 @@ export default class Cards extends React.Component {
   render() {
     const { tickets } = this.props;
     const tick = tickets.slice(0, 5);
-    return tick.map((el) => (
-      <Card
-        key={__.uniqueId()}
-        price={el.price}
-        carrier={el.carrier}
-        forwardRoute={`${el.segments[0].origin} - ${el.segments[0].destination}`}
-        timeForwardStart={format(new Date(el.segments[0].date), 'kk:mm')}
-        timeForwardDestination={format(
-          addMinutes(new Date(el.segments[0].date), el.segments[0].duration),
-          'kk:mm'
-        )}
-        timeFlightForward={this.countTime(el.segments[0].duration)}
-        stopsForward={el.segments[0].stops.join(', ')}
-        countStopsPhrase={this.getWord(el.segments[0].stops.length)}
-        backRoute={`${el.segments[1].origin} - ${el.segments[1].destination}`}
-        timeBackdStart={format(new Date(el.segments[1].date), 'kk:mm')}
-        timeBackDestination={format(
-          addMinutes(new Date(el.segments[1].date), el.segments[1].duration),
-          'kk:mm'
-        )}
-        timeFlightBack={this.countTime(el.segments[1].duration)}
-        stopsBack={el.segments[1].stops.join(', ')}
-        countStopsPhraseBack={this.getWord(el.segments[1].stops.length)}
-      />
-    ));
+    return tick.map(({
+      id, price, carrier,
+      segments: [{
+        origin, destination, date, duration, stops
+      },
+        {
+          origin: origin1, destination: destination1, date: date1, duration: duration1, stops: stops1
+        }]
+    }) => (
+        <Card
+          key={id}
+          price={price}
+          carrier={carrier}
+          forwardRoute={`${origin} - ${destination}`}
+          timeForwardStart={format(new Date(date), 'kk:mm')}
+          timeForwardDestination={format(
+            addMinutes(new Date(date), duration),
+            'kk:mm'
+          )}
+          timeFlightForward={this.countTime(duration)}
+          stopsForward={stops.join(', ')}
+          countStopsPhrase={this.getWord(stops.length)}
+          backRoute={`${origin1} - ${destination1}`}
+          timeBackdStart={format(new Date(date1), 'kk:mm')}
+          timeBackDestination={format(
+            addMinutes(new Date(date1), duration1),
+            'kk:mm'
+          )}
+          timeFlightBack={this.countTime(duration1)}
+          stopsBack={stops1.join(', ')}
+          countStopsPhraseBack={this.getWord(stops1.length)}
+        />
+      ));
   }
 }
 

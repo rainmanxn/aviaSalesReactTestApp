@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import __ from 'lodash';
 import Cards from './Cards';
 import FilterTransfer from './FilterTransfer';
 import CheapFastFilter from './CheapFastFilter';
@@ -53,8 +54,9 @@ export default class App extends React.Component {
       const response = await axios.get(searchIdLink);
       const { searchId } = response.data;
       const ticketsList = await axios.get(`${getTicketsLink}${searchId}`);
-      this.setState({ tickets: ticketsList.data.tickets });
-      this.setState({ filtered: ticketsList.data.tickets });
+      const tickets = ticketsList.data.tickets.map((el) => ({ ...el, id: __.uniqueId() }));
+      this.setState({ tickets });
+      this.setState({ filtered: tickets });
     } catch {
       this.getTickets();
     }
