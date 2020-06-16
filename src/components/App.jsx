@@ -37,8 +37,8 @@ const Main1 = styled.div`
 export default class App extends React.Component {
   state = {
     tickets: [],
-    status: ['0tranfers', '1tranfers', '2tranfers', '3tranfers'],
-    filt: 'default',
+    status: ['all'],
+    buttonState: 'default',
   };
 
   searchIdLink = 'https://front-test.beta.aviasales.ru/search';
@@ -63,42 +63,68 @@ export default class App extends React.Component {
 
   getTransferCountFilteredArr = (tickets) => {
     const { status } = this.state;
-    if (status.length === 4) {
+    if (status.indexOf('all') !== -1) {
       const filteredTickets = this.sortArr(tickets);
       return filteredTickets;
     }
     const curStatusToNum = status.map((el) => Number(el[0]));
     let filteredTickets = tickets.filter(
-      (el) => curStatusToNum.indexOf(el.segments[0].stops.length) === -1
-        && curStatusToNum.indexOf(el.segments[1].stops.length) === -1
+      (el) => curStatusToNum.indexOf(el.segments[0].stops.length) !== -1
+        && curStatusToNum.indexOf(el.segments[1].stops.length) !== -1
     );
     filteredTickets = this.sortArr(filteredTickets);
     return filteredTickets;
   };
 
-  updateFilteredTransfer = (value) => {
-    const tempStatus = ['0tranfers', '1tranfers', '2tranfers', '3tranfers'];
-    // console.log(value);
-    if (value === 'all' || value.length === 0) {
+  handleCheckboxChange = (value) => () => {
+    if (value === 'all') {
       this.setState({ status: ['all'] });
       return;
     }
-    const res = tempStatus.filter((el) => value.indexOf(el) === -1);
-    this.setState({ status: res });
+    let { status } = this.state;
+
+    if (status.indexOf('all') !== -1) {
+      status = [];
+    }
+    if (status.indexOf(value) === -1) {
+      status = [...status, value];
+      this.setState({ status });
+    } else {
+      status = status.filter((el) => el !== value);
+      if (status.length === 0) {
+        this.setState({ status: ['all'] });
+        return;
+      }
+      this.setState({ status });
+    }
   };
 
-  cheapFastGetFilter = (value) => {
-    this.setState({ filt: value });
-  }
+  handleClickCheap = () => {
+    const { buttonState } = this.state;
+    if (buttonState !== 'cheapest') {
+      this.setState({ buttonState: 'cheapest' });
+      return;
+    }
+    this.setState({ buttonState: 'default' });
+  };
+
+  handleClickFast = () => {
+    const { buttonState } = this.state;
+    if (buttonState !== 'fast') {
+      this.setState({ buttonState: 'fast' });
+      return;
+    }
+    this.setState({ buttonState: 'default' });
+  };
 
   renderFastGetFilter = (tickets) => {
-    const { filt } = this.state;
-    if (filt === 'cheapest') {
+    const { buttonState } = this.state;
+    if (buttonState === 'cheapest') {
       const arr = tickets;
       arr.sort((first, second) => first.price - second.price);
       return arr;
     }
-    if (filt === 'fast') {
+    if (buttonState === 'fast') {
       const arr = tickets;
       arr.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
         - (second.segments[0].duration + second.segments[1].duration));
@@ -108,11 +134,11 @@ export default class App extends React.Component {
   }
 
   sortArr = (array) => {
-    const { filt } = this.state;
-    if (filt === 'cheapest') {
+    const { buttonState } = this.state;
+    if (buttonState === 'cheapest') {
       return array.sort((first, second) => first.price - second.price);
     }
-    if (filt === 'fast') {
+    if (buttonState === 'fast') {
       return array.sort((first, second) => (first.segments[0].duration + first.segments[1].duration)
         - (second.segments[0].duration + second.segments[1].duration));
     }
@@ -120,16 +146,24 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { tickets } = this.state;
+    const { tickets, buttonState, status } = this.state;
     let filtered = this.renderFastGetFilter(tickets);
     filtered = this.getTransferCountFilteredArr(filtered);
     return (
       <Container>
         <Logo img={logo} />
         <Main>
-          <FilterTransfer updateFilteredTransfer={this.updateFilteredTransfer} />
+          <FilterTransfer
+            handleCheckboxChange={this.handleCheckboxChange}
+            status={status}
+          />
           <Main1>
-            <CheapFastFilter cheapFastGetFilter={this.cheapFastGetFilter} />
+            <CheapFastFilter
+              buttonState={buttonState}
+              cheapFastGetFilter={this.cheapFastGetFilter}
+              handleClickCheap={this.handleClickCheap}
+              handleClickFast={this.handleClickFast}
+            />
             <Cards tickets={filtered} />
           </Main1>
         </Main>

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import Checkbox from './Checkbox';
 
 const Container = styled.div`
@@ -48,45 +48,9 @@ const CheckboxText = styled.span`
   color: #4a4a4a;
 `;
 
-export default class FilterTransfer extends React.Component {
-  state = {
-    filterStatus: ['all'],
-  };
-
-  handleCheckboxChange = (value) => (event) => {
-    if (value === 'all') {
-      this.setState({ filterStatus: ['all'] });
-      this.update(value);
-      return;
-    }
-    const { filterStatus } = this.state;
-    if (filterStatus.length === 1 && value.indexOf(filterStatus) !== -1) {
-      this.setState({ filterStatus: ['all'] });
-      this.update('all');
-      return;
-    }
-    let res = filterStatus;
-    if (res.indexOf('all') !== -1) {
-      res = [];
-    }
-    if (event.target.checked) {
-      res = [...res, value];
-      this.setState({ filterStatus: res });
-    }
-    if (!event.target.checked) {
-      res = res.filter((el) => el !== value);
-      this.setState({ filterStatus: res });
-    }
-    this.update(res);
-  };
-
-  update = (value) => {
-    const { updateFilteredTransfer } = this.props;
-    updateFilteredTransfer(value);
-  };
-
-  renderCheckboxes = () => {
-    const { filterStatus } = this.state;
+const FilterTransfer = (props) => {
+  const { handleCheckboxChange, status } = props;
+  const renderCheckboxes = () => {
     const arr = [
       ['all', 'все'],
       ['0tranfers', 'Без пересадок'],
@@ -97,24 +61,25 @@ export default class FilterTransfer extends React.Component {
     return arr.map(([transfersCount, text]) => (
       <Label key={transfersCount}>
         <Checkbox
-          checked={filterStatus.indexOf(transfersCount) !== -1}
-          onChange={this.handleCheckboxChange(transfersCount)}
+          checked={status.indexOf(transfersCount) !== -1}
+          onChange={handleCheckboxChange(transfersCount)}
         />
         <CheckboxText>{text}</CheckboxText>
       </Label>
     ));
   };
 
-  render() {
-    return (
-      <Container>
-        <Header>количество пересадок</Header>
-        <CheckboxContainer>{this.renderCheckboxes()}</CheckboxContainer>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Header>количество пересадок</Header>
+      <CheckboxContainer>{renderCheckboxes()}</CheckboxContainer>
+    </Container>
+  );
+};
+
+export default FilterTransfer;
 
 FilterTransfer.propTypes = {
-  updateFilteredTransfer: PropTypes.func.isRequired,
+  handleCheckboxChange: PropTypes.func.isRequired,
+  status: PropTypes.arrayOf(string).isRequired,
 };

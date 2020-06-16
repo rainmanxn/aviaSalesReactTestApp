@@ -38,52 +38,24 @@ const Text = styled.div`
   color: ${(props) => (props.active ? '#FFFFFF' : '#4A4A4A')};
 `;
 
-export default class CheapFastFilter extends React.Component {
-  state = {
-    buttonState: 'default',
-  };
+const CheapFastFilter = (props) => {
+  const { handleClickCheap, handleClickFast, buttonState } = props;
+  return (
+    <Container>
+      <Button active={buttonState === 'cheapest'} first onClick={handleClickCheap}>
+        <Text active={buttonState === 'cheapest'}>самый дешевый</Text>
+      </Button>
+      <Button active={buttonState === 'fast'} onClick={handleClickFast}>
+        <Text active={buttonState === 'fast'}>самый быстрый</Text>
+      </Button>
+    </Container>
+  );
+};
 
-  handleClickCheap = (event) => {
-    event.preventDefault();
-    const { buttonState } = this.state;
-    const { cheapFastGetFilter } = this.props;
-    if (buttonState !== 'cheapest') {
-      cheapFastGetFilter('cheapest');
-      this.setState({ buttonState: 'cheapest' });
-      return;
-    }
-    cheapFastGetFilter('default');
-    this.setState({ buttonState: 'default' });
-  };
-
-  handleClickFast = (event) => {
-    event.preventDefault();
-    const { buttonState } = this.state;
-    const { cheapFastGetFilter } = this.props;
-    if (buttonState !== 'fast') {
-      cheapFastGetFilter('fast');
-      this.setState({ buttonState: 'fast' });
-      return;
-    }
-    cheapFastGetFilter('default');
-    this.setState({ buttonState: 'default' });
-  };
-
-  render() {
-    const { buttonState } = this.state;
-    return (
-      <Container>
-        <Button active={buttonState === 'cheapest'} first onClick={this.handleClickCheap}>
-          <Text active={buttonState === 'cheapest'}>самый дешевый</Text>
-        </Button>
-        <Button active={buttonState === 'fast'} onClick={this.handleClickFast}>
-          <Text active={buttonState === 'fast'}>самый быстрый</Text>
-        </Button>
-      </Container>
-    );
-  }
-}
+export default CheapFastFilter;
 
 CheapFastFilter.propTypes = {
-  cheapFastGetFilter: PropTypes.func.isRequired,
+  handleClickCheap: PropTypes.func.isRequired,
+  handleClickFast: PropTypes.func.isRequired,
+  buttonState: PropTypes.string.isRequired,
 };
